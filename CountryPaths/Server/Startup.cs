@@ -17,6 +17,11 @@ namespace CountryPaths.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddGrpc();
+            services.AddCors(c => c.AddPolicy("Allow", builder => {
+                builder.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -28,10 +33,12 @@ namespace CountryPaths.Server
             }
 
             app.UseRouting();
+            app.UseGrpcWeb();
+            app.UseCors();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<GreeterService>();
+                endpoints.MapGrpcService<GreeterService>().EnableGrpcWeb().RequireCors("Allow");
 
                 endpoints.MapGet("/", async context =>
                 {
