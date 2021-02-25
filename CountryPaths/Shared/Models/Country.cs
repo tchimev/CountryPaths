@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CountryPaths.Shared.DB
+namespace CountryPaths.Shared.Models
 {
     internal class Country
     {

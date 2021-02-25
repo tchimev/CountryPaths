@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CountryPaths.Shared.DB
+namespace CountryPaths.Shared.Models
 {
     internal class CountryPathsContext : DbContext
     {
@@ -14,7 +14,7 @@ namespace CountryPaths.Shared.DB
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=CountryPathsDb.db");
+            optionsBuilder.UseSqlite("Data Source=C:\\Temp\\CountryPathsDb.db");
 
             base.OnConfiguring(optionsBuilder);
         }

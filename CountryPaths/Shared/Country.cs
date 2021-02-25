@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CountryPaths.Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -21,15 +22,15 @@ namespace CountryPaths.Shared
         /// Creates country
         /// </summary>
         /// <param name="dbCountry"></param>
-        //public Country(ServiceCountries.CountriesDto dbCountry)
-        //{
-        //    this.ID = dbCountry.CountryId;
-        //    this.Name = dbCountry.Name;
-        //    this.X = dbCountry.XCoordinate;
-        //    this.Y = dbCountry.YCoordinate;
-        //    this.IsVisited = false;
-        //    this.Weight = double.PositiveInfinity;
-        //}
+        internal Country(Models.Country dbCountry)
+        {
+            this.ID = dbCountry.CountryId;
+            this.Name = dbCountry.Name;
+            this.X = dbCountry.XCoordinate;
+            this.Y = dbCountry.YCoordinate;
+            this.IsVisited = false;
+            this.Weight = double.PositiveInfinity;
+        }
 
         public override string ToString()
         {
@@ -61,13 +62,14 @@ namespace CountryPaths.Shared
         public static Countries GetCountries()
         {
             Countries cs = new Countries();
-            //ServiceCountries.CountriesModelServiceClient sc = new ServiceCountries.CountriesModelServiceClient();
-            //var countries = sc.ReadCountrieses();
 
-            //foreach (var item in countries)
-            //{
-            //    cs.Add(new Country(item));
-            //}
+            using (var db = new CountryPathsContext())
+            {
+                foreach (var item in db.Countries)
+                {
+                    cs.Add(new Country(item));
+                }
+            }
 
             return cs;
         }

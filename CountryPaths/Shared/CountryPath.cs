@@ -69,16 +69,18 @@ namespace CountryPaths.Shared
         public static CountryPaths GetCountryPaths(Countries countries)
         {
             CountryPaths cps = new CountryPaths();
-            //ServiceCountries.CountriesModelServiceClient sc = new ServiceCountries.CountriesModelServiceClient();
-            //var paths = sc.ReadCountryPathses();
 
-            //foreach (var item in paths)
-            //{
-            //    var c1 = countries.Where(c => c.ID == item.CountryId1).SingleOrDefault();
-            //    var c2 = countries.Where(c => c.ID == item.CountryId2).SingleOrDefault();
-            //    if (c1 != null && c2 != null)
-            //        cps.Add(new CountryPath(item.CountryLinkId, c1, c2));
-            //}
+            using (var db = new Models.CountryPathsContext())
+            {
+                foreach (var item in db.CountryPaths)
+                {
+                    var c1 = countries.Where(c => c.ID == item.CountryId1).SingleOrDefault();
+                    var c2 = countries.Where(c => c.ID == item.CountryId2).SingleOrDefault();
+                    if (c1 != null && c2 != null)
+                        cps.Add(new CountryPath(item.CountryLinkId, c1, c2));
+                }
+
+            }
 
             return cps;
         }
