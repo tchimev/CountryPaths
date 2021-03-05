@@ -39,6 +39,7 @@ namespace CountryPaths.Server
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<GreeterService>().EnableGrpcWeb().RequireCors("Allow");
+                endpoints.MapGrpcService<CountriesMapService>().EnableGrpcWeb().RequireCors("Allow");
 
                 endpoints.MapGet("/", async context =>
                 {

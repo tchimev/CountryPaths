@@ -17,12 +17,9 @@ namespace CountryPaths.Server
 
         public override Task<HelloReply> SayHello(HelloRequest request, ServerCallContext context)
         {
-            var c = Shared.Countries.GetCountries().Where(c => c.ID == 100).FirstOrDefault();
-            var cdata = c.Name ?? "no data";
-
             return Task.FromResult(new HelloReply
             {
-                Message = "Hello " + request.Name + " from country " + cdata
+                Message = "Hello " + request.Name
             });
         }
     }

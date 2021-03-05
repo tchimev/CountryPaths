@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option csharp_namespace = "CountryPaths.Server.Protos";
+
+package countriesMap;
+import "google/protobuf/empty.proto";
+
+service CountriesMap {
+	rpc GetCountries (google.protobuf.Empty) returns (CountriesReplay);
+    rpc FindShortestRoute (CountriesRequest) returns (RouteReplay);
+}
+
+message Country{
+	int32 id = 1;
+	string name = 2;
+}
+
+message CountriesReplay{
+	repeated Country countries = 1;
+}
+
+message CountriesRequest{
+	int32 startCountryId = 1;
+	int32 endCountryId = 2;
+}
+
+message RouteReplay{
+	repeated Country route = 1;
+}
