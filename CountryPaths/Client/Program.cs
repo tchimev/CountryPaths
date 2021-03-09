@@ -20,13 +20,19 @@ namespace CountryPaths.Client
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+                
+            var httpHandler = new GrpcWebHandler(new HttpClientHandler());
+            var channel = GrpcChannel.ForAddress("https://localhost:5001", new GrpcChannelOptions { HttpHandler = httpHandler });
+           
             builder.Services.AddSingleton(ss => 
             {
-                var httpHandler = new GrpcWebHandler(new HttpClientHandler());
-
-                var channel = GrpcChannel.ForAddress("https://localhost:5001", new GrpcChannelOptions { HttpHandler = httpHandler });
                 return new Server.Greeter.GreeterClient(channel);
             });
+            builder.Services.AddSingleton(ss =>
+            {
+                return new Server.Protos.CountriesMap.CountriesMapClient(channel);
+            });
+
             await builder.Build().RunAsync();
         }
     }

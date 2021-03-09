@@ -1,0 +1,70 @@
+﻿@page "/countries"
+@using Server.Protos;
+@inject CountriesMap.CountriesMapClient mapClient
+
+<h3>Calculate shortest route between two countries</h3>
+
+<p>
+    <label for="startCountries">Choose a start country:</label>
+    <select name="startCountries" id="startCountries" @onchange="StartChange">
+        @foreach (var country in countryList)
+        {
+            <option value="@country.Id">@country.Name</option>
+        }
+    </select>
+
+    <label for="endCountries">Choose an end country:</label>
+    <select name="endCountries" id="endCountries" @onchange="EndChange">
+        @foreach (var country in countryList)
+        {
+            <option value="@country.Id">@country.Name</option>
+        }
+    </select>
+</p>
+
+<p>
+    <button @onclick="CalcRoute" class="btn btn-primary">Calculate route</button>
+</p>
+<p>
+    <h5>Shortest route</h5>
+    <ol>
+        @foreach (var country in countryRoute)
+        {
+            <li>@country.Name</li>
+        }
+    </ol>
+</p>
+@code {
+
+    List<Country> countryList = new List<Country>();
+    List<Country> countryRoute = new List<Country>();
+    int startCountryId = 1;
+    int endCountryId = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var replay = await mapClient.GetCountriesAsync(new Google.Protobuf.WellKnownTypes.Empty());
+        countryList = replay.Countries.Select(c=> new Country { Id = c.Id, Name = c.Name}).ToList();
+    }
+
+    async Task CalcRoute()
+    {
+        var request = new CountriesRequest
+        {
+            StartCountryId = startCountryId,
+            EndCountryId = endCountryId
+        };
+        var replay = await mapClient.FindShortestRouteAsync(request);
+        countryRoute = replay.Route.Select(c => new Country { Id = c.Id, Name = c.Name }).ToList();
+    }
+
+    void StartChange(ChangeEventArgs args)
+    {
+        startCountryId = int.Parse(args.Value.ToString());
+    }
+    void EndChange(ChangeEventArgs args)
+    {
+        endCountryId = int.Parse(args.Value.ToString());
+    }
+
+}
